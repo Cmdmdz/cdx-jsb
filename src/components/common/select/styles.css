@@ -1,0 +1,3 @@
+.tw-mat-select button span {
+    @apply line-clamp-1 pr-6;
+}

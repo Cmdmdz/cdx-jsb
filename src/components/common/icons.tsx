@@ -1,0 +1,5 @@
+export { MdMenu as MenuIcon } from 'react-icons/md'
+export { RxCross1 as CrossIcon } from 'react-icons/rx'
+export { BiHomeAlt as HomeAltIcon } from 'react-icons/bi'
+export { LuFileEdit as FileEditIcon } from 'react-icons/lu'
+export { IoNewspaperOutline as NewsPaperOutlineIcon } from 'react-icons/io5'
