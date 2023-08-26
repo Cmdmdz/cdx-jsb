@@ -3,10 +3,21 @@ import React from 'react'
 import ReportForm, {
     ReportFormValue
 } from '@/components/ui/report-form/report-form'
+import { createForm } from '@/external/http/report-form'
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
-    const handleSubmit = (value: ReportFormValue) => {
-        console.log('submit value:', value)
+    const router = useRouter()
+    const handleSubmit = async (value: ReportFormValue) => {
+        const request = {
+            ...value,
+            type: 2
+        } as ReportFormValue
+
+        const success = await createForm(request)
+        if (success) {
+            router.push('/')
+        }
     }
 
     return (

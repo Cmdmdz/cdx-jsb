@@ -7,7 +7,7 @@ import ThemeProvider from '@/components/common/theme-provider'
 import Footer from '@/components/common/footer/footer'
 import ScrollToTopBottom from '@/components/common/scroll-to'
 import { themeConfig } from '@/config/theme'
-import { Toaster } from 'react-hot-toast'
+import Toast from '@/components/common/toast'
 
 const kanit = Kanit({
     subsets: ['latin'],
@@ -37,7 +37,7 @@ export default function RootLayout({
             className={classNames(kanit.variable, poppins.variable)}
         >
             <body className='min-h-screen bg-white'>
-                <Toaster />
+                <Toast />
                 <ThemeProvider value={themeConfig}>
                     <ScrollToTopBottom />
                     <div className='min-h-screen flex flex-col'>

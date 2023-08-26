@@ -3,20 +3,20 @@ import React, { useState } from 'react'
 import classNames from 'classnames'
 
 interface FileUploadProps {
-    className?: string;
-    onChange?: (files: File[]) => void;
+    className?: string
+    onChange?: (files: File[]) => void
 }
 
-const FileUpload = ({ className, onChange }: FileUploadProps) => {
+const FileUpload = ({ onChange }: FileUploadProps) => {
     const [fileNames, setFileNames] = useState<string[]>([])
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const fileList = event.target.files;
+        const fileList = event.target.files
         if (fileList) {
-            const files = Array.from(fileList); // Convert to array
-            setFileNames(files.map((file) => file.name));
+            const files = Array.from(fileList) // Convert to array
+            setFileNames(files.map((file) => file.name))
             if (onChange) {
-                onChange(files); // Call the passed-in function
+                onChange(files) // Call the passed-in function
             }
         }
     }

@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import URLInput from '@/components/common/input/url-input'
 import { useForm } from 'react-hook-form'
 import TextareaInput from '@/components/common/input/textarea'
@@ -8,9 +8,11 @@ import Select from '@/components/common/select'
 import Checkbox from '@/components/common/checkbox'
 import FileUpload from '@/components/common/file-upload'
 import { toast } from 'react-hot-toast'
-import useGamblingType from "@/hooks/data/useGamblingType";
-import useInviteTunnel from "@/hooks/data/useInviteTunnel";
-import useInviter from "@/hooks/data/useInviter";
+import useGamblingType from '@/hooks/data/useGamblingType'
+import useInviteTunnel from '@/hooks/data/useInviteTunnel'
+import useInviter from '@/hooks/data/useInviter'
+import LoadingSpinner from '@/components/common/loading'
+import { useRouter } from 'next/navigation'
 
 function FieldLabel({ label = '', required = false }) {
     return (
@@ -46,7 +48,10 @@ export interface ReportFormValue {
     funnelOther: string
     inviteFunnel: string
     inviteFunnelOther: string
+    agreePolicy: boolean
+    damageValue: number
     files: File[]
+    type: number
 }
 
 const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
@@ -61,27 +66,47 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                 funnelOther: '',
                 inviteFunnel: '',
                 inviteFunnelOther: '',
-                files: []
+                agreePolicy: false,
+                files: [],
+                damageValue: 0
             },
             mode: 'all',
             reValidateMode: 'onBlur'
         })
 
+    const router = useRouter()
+
+    // Handle the button click
+    const btnBack = () => {
+        router.push('/')
+    }
+
     const gamblingType = watch('gamblingType')
     const funnel = watch('funnel')
     const inviteFunnel = watch('inviteFunnel')
-    const { data: gamblingTypeOptions, isLoading: isGamblingTypeLoading } = useGamblingType();
-    const { data: inviteOptions, isLoading: isInviterLoading } = useInviter();
-    const { data: tunnelOptions, isLoading: isInviteTunnelLoading } = useInviteTunnel();
+    const { data: gamblingTypeOptions, isLoading: isGamblingTypeLoading } =
+        useGamblingType()
+    const { data: inviteOptions, isLoading: isInviterLoading } = useInviter()
+    const { data: tunnelOptions, isLoading: isInviteTunnelLoading } =
+        useInviteTunnel()
 
-    const optionGamblingType = gamblingTypeOptions?.map(option =>
-        ({ value: option.id.toString(), text: option.attributes.label })) || [];
+    const optionGamblingType =
+        gamblingTypeOptions?.map((option) => ({
+            value: option.id.toString(),
+            text: option.attributes.label
+        })) || []
 
-    const optionInvite = inviteOptions?.map(option =>
-        ({ value: option.id.toString(), text: option.attributes.label })) || [];
+    const optionInvite =
+        inviteOptions?.map((option) => ({
+            value: option.id.toString(),
+            text: option.attributes.label
+        })) || []
 
-    const optionTunnel = tunnelOptions?.map(option =>
-        ({ value: option.id.toString(), text: option.attributes.label })) || [];
+    const optionTunnel =
+        tunnelOptions?.map((option) => ({
+            value: option.id.toString(),
+            text: option.attributes.label
+        })) || []
 
     useEffect(() => {
         if (formState.errors.root?.message) {
@@ -89,9 +114,8 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
         }
     }, [formState.errors.root?.message])
 
-
     if (isGamblingTypeLoading || isInviterLoading || isInviteTunnelLoading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner></LoadingSpinner>
     }
 
     return (
@@ -187,7 +211,7 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                     <FileUpload
                         className='w-full'
                         onChange={(files) => {
-                            setValue('files', files);
+                            setValue('files', files)
                         }}
                     />
 
@@ -272,7 +296,7 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                 <Checkbox
                     name='agreePolicy'
                     control={control}
-                    rules={{ required: true, value: true }}
+                    rules={{ required: true }}
                 />
                 <p className='w-full text-base leading-normal'>
                     ข้าพเจ้ายินยอมให้ติดต่อกลับเพื่อให้ข้อมูลเพิ่มเติม*
@@ -282,7 +306,10 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                 className='font-kanit inline-flex w-full flex-col items-center gap-[15px] px-6 pb-8 text-center
             text-white md:col-span-2 md:m-auto md:max-w-screen-sm md:flex-row'
             >
-                <button className='flex w-full h-[60px] items-center justify-center gap-2.5 self-stretch rounded-[100px] bg-[#4B5267] px-6 py-1.5'>
+                <button
+                    className='flex w-full h-[60px] items-center justify-center gap-2.5 self-stretch rounded-[100px] bg-[#4B5267] px-6 py-1.5'
+                    onClick={btnBack}
+                >
                     <span className='w-full text-xl leading-normal underline'>
                         ย้อนกลับ
                     </span>

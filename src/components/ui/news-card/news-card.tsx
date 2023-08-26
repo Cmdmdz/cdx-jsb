@@ -11,7 +11,6 @@ import ScrollableImage from '@/components/common/scrollable-image'
 
 export default function NewsCard({
     title,
-
     content,
     contentImageUrl: contentImage = [],
     thumbnailUrl: source,

@@ -7,33 +7,26 @@ interface UseYoutubeVideoResult {
 }
 
 function getVideoId(url: string): string | undefined {
-    const match = url.match(/[?&]v=([^&]+)/)
+    const regex =
+        /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+    const match = url.match(regex)
     return match?.[1]
 }
 
-function getYouTubeThumbnail(id: string): string | null {
-    // Extract the video ID from the URL
-    if (id) {
-        // Construct the thumbnail URL using the video ID
-        var thumbnailURL = 'https://i.ytimg.com/vi/' + id + '/hq720.jpg'
-        return thumbnailURL
-    }
-
-    return null
+function getYouTubeThumbnail(id: string): string {
+    return `https://i.ytimg.com/vi/${id}/hq720.jpg`
 }
 
 export function useYoutubeVideo(videoUrl?: string): UseYoutubeVideoResult {
-    const [videoId, setVideoId] = useState<string>()
+    const [videoId, setVideoId] = useState<string | undefined>()
     const [thumbnail, setThumbnail] = useState<string | undefined>()
 
     useEffect(() => {
         if (videoUrl) {
-            const videoId = getVideoId(videoUrl)
-            console.log('videoId', videoId)
-            if (videoId) {
-                const thumbnail = getYouTubeThumbnail(videoId)
-                setVideoId(videoId)
-                setThumbnail(thumbnail || '')
+            const extractedVideoId = getVideoId(videoUrl)
+            if (extractedVideoId) {
+                setVideoId(extractedVideoId)
+                setThumbnail(getYouTubeThumbnail(extractedVideoId))
             }
         }
     }, [videoUrl])
