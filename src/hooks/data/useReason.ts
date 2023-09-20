@@ -1,7 +1,6 @@
 'use client'
 import useSWR from 'swr'
 import { TypeOption } from '@/constants/common-type'
-import fetchInviteTunnelOptions from '@/external/http/invite-tunnel'
 import fetchReasonOptions from '@/external/http/reason'
 
 interface UseReasonReturn {
