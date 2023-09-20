@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3001'
+const BASE_URL = 'https://admin.juststopgambling.com'
 
 export const INVITER_OPTIONS = BASE_URL + '/api/inviter-options'
 export const INVITE_TUNNEL_OPTIONS = BASE_URL + '/api/invite-tunnel-options'
