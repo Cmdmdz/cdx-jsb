@@ -24,6 +24,7 @@ export default function Page() {
         <ReportForm
             onSubmit={handleSubmit}
             submitButtonText='แจ้งเบาะแสเว็บพนัน'
+            disableDamageValue={false}
         />
     )
 }

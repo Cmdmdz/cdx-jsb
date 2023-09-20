@@ -24,6 +24,7 @@ export default function Page() {
         <ReportForm
             onSubmit={handleSubmit}
             submitButtonText='ส่งเรื่องร้องเรียนพนัน'
+            disableDamageValue={true}
         />
     )
 }

@@ -8,6 +8,8 @@ import Footer from '@/components/common/footer/footer'
 import ScrollToTopBottom from '@/components/common/scroll-to'
 import { themeConfig } from '@/config/theme'
 import Toast from '@/components/common/toast'
+import React from 'react'
+import ButtonLine from '@/components/common/button-line'
 
 const kanit = Kanit({
     subsets: ['latin'],
@@ -39,7 +41,7 @@ export default function RootLayout({
             <body className='min-h-screen bg-white'>
                 <Toast />
                 <ThemeProvider value={themeConfig}>
-                    <ScrollToTopBottom />
+                    {/*<ScrollToTopBottom />*/}
                     <div className='min-h-screen flex flex-col'>
                         <Navbar />
                         <div className='flex flex-col flex-1'>
@@ -49,6 +51,7 @@ export default function RootLayout({
                             </div>
                         </div>
                     </div>
+                    <ButtonLine />
                 </ThemeProvider>
             </body>
         </html>

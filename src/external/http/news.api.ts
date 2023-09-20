@@ -115,7 +115,6 @@ export default async function fetchNews({
 
         return news
     } catch (error) {
-        console.error('Failed to fetch gambling type options', error)
         throw error
     }
 }

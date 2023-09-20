@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import URLInput from '@/components/common/input/url-input'
 import { useForm } from 'react-hook-form'
 import TextareaInput from '@/components/common/input/textarea'
@@ -13,6 +13,9 @@ import useInviteTunnel from '@/hooks/data/useInviteTunnel'
 import useInviter from '@/hooks/data/useInviter'
 import LoadingSpinner from '@/components/common/loading'
 import { useRouter } from 'next/navigation'
+import useReason from '@/hooks/data/useReason'
+import useCause from '@/hooks/data/useCause'
+import usePeriod from '@/hooks/data/usePeriod'
 
 function FieldLabel({ label = '', required = false }) {
     return (
@@ -37,6 +40,7 @@ interface ReportFormProps {
     // eslint-disable-next-line unused-imports/no-unused-vars
     onSubmit: (values: ReportFormValue) => void
     submitButtonText: string
+    disableDamageValue?: boolean // New prop
 }
 
 export interface ReportFormValue {
@@ -50,11 +54,20 @@ export interface ReportFormValue {
     inviteFunnelOther: string
     agreePolicy: boolean
     damageValue: number
+    period: string
+    cause: string
+    causeOther: string
+    reason: string
+    reasonOther: string
     files: File[]
     type: number
 }
 
-const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
+const ReportForm = ({
+    onSubmit,
+    submitButtonText,
+    disableDamageValue = false
+}: ReportFormProps) => {
     const { control, handleSubmit, watch, setValue, formState } =
         useForm<ReportFormValue>({
             defaultValues: {
@@ -66,6 +79,11 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                 funnelOther: '',
                 inviteFunnel: '',
                 inviteFunnelOther: '',
+                cause: '',
+                causeOther: '',
+                period: '',
+                reason: '',
+                reasonOther: '',
                 agreePolicy: false,
                 files: [],
                 damageValue: 0
@@ -84,11 +102,17 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
     const gamblingType = watch('gamblingType')
     const funnel = watch('funnel')
     const inviteFunnel = watch('inviteFunnel')
+    const reason = watch('reason')
+    const cause = watch('cause')
     const { data: gamblingTypeOptions, isLoading: isGamblingTypeLoading } =
         useGamblingType()
     const { data: inviteOptions, isLoading: isInviterLoading } = useInviter()
     const { data: tunnelOptions, isLoading: isInviteTunnelLoading } =
         useInviteTunnel()
+
+    const { data: reasonOptions, isLoading: isReasonLoading } = useReason()
+    const { data: causeOptions, isLoading: isCauseLoading } = useCause()
+    const { data: periodOptions, isLoading: isPeriodLoading } = usePeriod()
 
     const optionGamblingType =
         gamblingTypeOptions?.map((option) => ({
@@ -108,13 +132,41 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
             text: option.attributes.label
         })) || []
 
+    const optionReason =
+        reasonOptions?.map((option) => ({
+            value: option.id.toString(),
+            text: option.attributes.label
+        })) || []
+
+    const optionPeriod =
+        periodOptions?.map((option) => ({
+            value: option.id.toString(),
+            text: option.attributes.label
+        })) || []
+
+    const optionCause =
+        causeOptions?.map((option) => ({
+            value: option.id.toString(),
+            text: option.attributes.label
+        })) || []
+
+    const [isDamageValueDisabled, setIsDamageValueDisabled] =
+        useState(disableDamageValue)
+
     useEffect(() => {
         if (formState.errors.root?.message) {
             toast.error(formState.errors.root.message)
         }
     }, [formState.errors.root?.message])
 
-    if (isGamblingTypeLoading || isInviterLoading || isInviteTunnelLoading) {
+    if (
+        isGamblingTypeLoading ||
+        isInviterLoading ||
+        isInviteTunnelLoading ||
+        isReasonLoading ||
+        isCauseLoading ||
+        isPeriodLoading
+    ) {
         return <LoadingSpinner></LoadingSpinner>
     }
 
@@ -144,28 +196,7 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                     />
                     {/*<Input type="PLACEHOLDER_TYPE" text="กรอกรายละเอียด" />*/}
                 </div>
-                <div className='flex w-full flex-col items-start px-6 py-4 font-medium'>
-                    <FieldLabel label='ประเภทของการพนัน' required />
-                    <Select
-                        name='gamblingType'
-                        control={control}
-                        className='w-full'
-                        placeholder='กรุณาเลือก'
-                        rules={{
-                            required: true
-                        }}
-                        options={optionGamblingType}
-                    />
-                    {gamblingType === '6' && (
-                        <Input
-                            className='mt-3 w-full'
-                            name='gamblingOtherType'
-                            control={control}
-                            placeholder='ระบุ'
-                            rules={{ required: true }}
-                        />
-                    )}
-                </div>
+
                 <div className='flex w-full flex-col items-start px-6 py-4 font-medium'>
                     <FieldLabel label='ผ่านช่องทางใด' required />
                     <Select
@@ -187,6 +218,81 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                             rules={{ required: true }}
                         />
                     )}
+                </div>
+
+                {isDamageValueDisabled ? (
+                    <>
+                        <div className='flex w-full flex-col items-start px-6 py-4 font-medium'>
+                            <FieldLabel
+                                label='เหตุผลที่เข้าไปเล่นการพนันออนไลน์'
+                                required
+                            />
+                            <Select
+                                name='reason'
+                                control={control}
+                                className='w-full'
+                                placeholder='กรุณาเลือก'
+                                rules={{
+                                    required: true
+                                }}
+                                options={optionReason}
+                            />
+                            {reason === '3' && (
+                                <Input
+                                    className='mt-3 w-full'
+                                    name='reasonOther'
+                                    control={control}
+                                    placeholder='ระบุ'
+                                    rules={{ required: true }}
+                                />
+                            )}
+                        </div>
+
+                        <div className='flex w-full flex-col items-start gap-[5px] self-stretch px-6 py-4 font-medium'>
+                            <FieldLabel
+                                label='สาเหตุที่เลือกเว็บพนันเว็บไซต์นี้'
+                                required
+                            />
+                            <Select
+                                name='cause'
+                                control={control}
+                                className='w-full'
+                                placeholder='กรุณาเลือก'
+                                rules={{
+                                    required: true
+                                }}
+                                options={optionCause}
+                            />
+                            {cause === '3' && (
+                                <Input
+                                    className='mt-3 w-full'
+                                    name='causeOther'
+                                    control={control}
+                                    rules={{ required: true }}
+                                    placeholder='ระบุ'
+                                />
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <></>
+                )}
+
+                <div className='flex w-full flex-col items-start gap-2.5 self-stretch px-6 py-4 font-medium text-black'>
+                    <FieldLabel label='เบอร์โทรติดต่อ' />
+                    <Input
+                        placeholder='xxx-xxx-xxxx'
+                        control={control}
+                        name='contact'
+                        className='w-full'
+                        maskOptions={{
+                            mask: '{0}00-000-000[0]'
+                        }}
+                        rules={{
+                            maxLength: 10,
+                            pattern: /^0[0-9]{8,9}/
+                        }}
+                    />
                 </div>
             </div>
             <div className='font-kanit inline-flex w-full flex-col items-center text-left md:col-span-1'>
@@ -217,25 +323,30 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
 
                     {/*<FileUpload className="w-full" />*/}
                 </div>
-                <div className='flex w-full flex-col items-start gap-[5px] self-stretch px-6 py-4 text-black'>
-                    <FieldLabel label='มูลค่าความเสียหาย' />
-                    <p className='w-full text-[15px] font-[400] leading-normal'>
-                        (ใส่จำนวนเงินเป็นตัวเลขเท่านั้น)
-                    </p>
-                    <Input
+
+                <div className='flex w-full flex-col items-start px-6 py-4 font-medium'>
+                    <FieldLabel label='ประเภทของการพนัน' required />
+                    <Select
+                        name='gamblingType'
                         control={control}
-                        name='damageValue'
                         className='w-full'
-                        placeholder='จำนวนเงิน'
-                        maskOptions={{
-                            mask: Number,
-                            thousandsSeparator: ','
-                        }}
+                        placeholder='กรุณาเลือก'
                         rules={{
-                            pattern: /[0-9]+/
+                            required: true
                         }}
+                        options={optionGamblingType}
                     />
+                    {gamblingType === '6' && (
+                        <Input
+                            className='mt-3 w-full'
+                            name='gamblingOtherType'
+                            control={control}
+                            placeholder='ระบุ'
+                            rules={{ required: true }}
+                        />
+                    )}
                 </div>
+
                 <div className='flex w-full flex-col items-start gap-[5px] self-stretch px-6 py-4 font-medium'>
                     <FieldLabel label='ถูกชักชวนจากแหล่งใด' required />
                     <Select
@@ -258,22 +369,46 @@ const ReportForm = ({ onSubmit, submitButtonText }: ReportFormProps) => {
                         />
                     )}
                 </div>
-                <div className='flex w-full flex-col items-start gap-2.5 self-stretch px-6 py-4 font-medium text-black'>
-                    <FieldLabel label='เบอร์โทรติดต่อ' />
-                    <Input
-                        placeholder='xxx-xxx-xxxx'
-                        control={control}
-                        name='contact'
-                        className='w-full'
-                        maskOptions={{
-                            mask: '{0}00-000-000[0]'
-                        }}
-                        rules={{
-                            maxLength: 10,
-                            pattern: /^0[0-9]{8,9}/
-                        }}
-                    />
-                </div>
+
+                {isDamageValueDisabled ? (
+                    <>
+                        <div className='flex w-full flex-col items-start gap-[5px] self-stretch px-6 py-4 font-medium'>
+                            <FieldLabel label='ระยะเวลาที่เล่นพนัน' required />
+                            <Select
+                                name='period'
+                                control={control}
+                                className='w-full'
+                                placeholder='กรุณาเลือก'
+                                rules={{
+                                    required: true
+                                }}
+                                options={optionPeriod}
+                            />
+                        </div>
+
+                        <div className='flex w-full flex-col items-start gap-[5px] self-stretch px-6 py-4 text-black'>
+                            <FieldLabel label='มูลค่าความเสียหาย' />
+                            <p className='w-full text-[15px] font-[400] leading-normal'>
+                                (ใส่จำนวนเงินเป็นตัวเลขเท่านั้น)
+                            </p>
+                            <Input
+                                control={control}
+                                name='damageValue'
+                                className='w-full'
+                                placeholder='จำนวนเงิน'
+                                maskOptions={{
+                                    mask: Number,
+                                    thousandsSeparator: ','
+                                }}
+                                rules={{
+                                    pattern: /[0-9]+/
+                                }}
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <div></div>
+                )}
             </div>
             <div
                 className='font-kanit inline-flex w-full items-center justify-center gap-2.5 p-6 text-center font-medium text-primary

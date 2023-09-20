@@ -4,17 +4,7 @@ import { ReportFormValue } from '@/components/ui/report-form/report-form'
 import { toast } from 'react-hot-toast'
 
 // upload the file to your API
-export interface FileFormat {
-    ext: string
-    url: string
-    hash: string
-    mime: string
-    name: string
-    path: null | string
-    size: number
-    width: number
-    height: number
-}
+
 export interface Connection {
     id: number
     position: {
@@ -29,6 +19,11 @@ export interface FormRequest {
     callback_agreement: boolean
     locale: string
     evidences: any
+    inviter_others: string
+    gambling_type_others: string
+    tunnel_others: string
+    reason_other: string
+    cause_other: string
     type: {
         disconnect: any[]
         connect: Connection[]
@@ -42,6 +37,18 @@ export interface FormRequest {
         connect: Connection[]
     }
     tunnel: {
+        disconnect: any[]
+        connect: Connection[]
+    }
+    reason: {
+        disconnect: any[]
+        connect: Connection[]
+    }
+    period: {
+        disconnect: any[]
+        connect: Connection[]
+    }
+    cause: {
         disconnect: any[]
         connect: Connection[]
     }
@@ -79,6 +86,11 @@ export const reportFormToFormRequest: ReportFormToFormRequest = async (
         callback_agreement: formValue.agreePolicy,
         locale: 'th-TH',
         evidences: evidences,
+        inviter_others: formValue.inviteFunnelOther,
+        gambling_type_others: formValue.gamblingOtherType,
+        tunnel_others: formValue.funnelOther,
+        cause_other: formValue.causeOther,
+        reason_other: formValue.reasonOther,
         type: {
             disconnect: [],
             connect: [
@@ -117,6 +129,39 @@ export const reportFormToFormRequest: ReportFormToFormRequest = async (
             connect: [
                 {
                     id: Number(formValue.inviteFunnel),
+                    position: {
+                        end: true
+                    }
+                }
+            ]
+        },
+        cause: {
+            disconnect: [],
+            connect: [
+                {
+                    id: Number(formValue.cause),
+                    position: {
+                        end: true
+                    }
+                }
+            ]
+        },
+        period: {
+            disconnect: [],
+            connect: [
+                {
+                    id: Number(formValue.period),
+                    position: {
+                        end: true
+                    }
+                }
+            ]
+        },
+        reason: {
+            disconnect: [],
+            connect: [
+                {
+                    id: Number(formValue.reason),
                     position: {
                         end: true
                     }

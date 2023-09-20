@@ -2,16 +2,17 @@
 import useSWR from 'swr'
 import { TypeOption } from '@/constants/common-type'
 import fetchInviteTunnelOptions from '@/external/http/invite-tunnel'
+import fetchCauseOptions from '@/external/http/cause'
 
-interface UseInviteTunnelReturn {
+interface UseCauseTypeReturn {
     data: TypeOption[] | undefined
     isLoading: boolean
 }
 
-export default function UseInviteTunnel(): UseInviteTunnelReturn {
+export default function useCause(): UseCauseTypeReturn {
     const { data, error } = useSWR<TypeOption[]>(
-        '/api/invite-tunnel-options',
-        fetchInviteTunnelOptions,
+        '/api/cause-options',
+        fetchCauseOptions,
         { revalidateOnFocus: true }
     )
 

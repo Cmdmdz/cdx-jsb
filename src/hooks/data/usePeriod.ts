@@ -2,16 +2,17 @@
 import useSWR from 'swr'
 import { TypeOption } from '@/constants/common-type'
 import fetchInviteTunnelOptions from '@/external/http/invite-tunnel'
+import fetchPeriodOptions from '@/external/http/period'
 
-interface UseInviteTunnelReturn {
+interface UsePeriodReturn {
     data: TypeOption[] | undefined
     isLoading: boolean
 }
 
-export default function UseInviteTunnel(): UseInviteTunnelReturn {
+export default function usePeriod(): UsePeriodReturn {
     const { data, error } = useSWR<TypeOption[]>(
-        '/api/invite-tunnel-options',
-        fetchInviteTunnelOptions,
+        '/api/period-options',
+        fetchPeriodOptions,
         { revalidateOnFocus: true }
     )
 

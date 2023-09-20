@@ -2,16 +2,17 @@
 import useSWR from 'swr'
 import { TypeOption } from '@/constants/common-type'
 import fetchInviteTunnelOptions from '@/external/http/invite-tunnel'
+import fetchReasonOptions from '@/external/http/reason'
 
-interface UseInviteTunnelReturn {
+interface UseReasonReturn {
     data: TypeOption[] | undefined
     isLoading: boolean
 }
 
-export default function UseInviteTunnel(): UseInviteTunnelReturn {
+export default function useReason(): UseReasonReturn {
     const { data, error } = useSWR<TypeOption[]>(
-        '/api/invite-tunnel-options',
-        fetchInviteTunnelOptions,
+        '/api/reason-options',
+        fetchReasonOptions,
         { revalidateOnFocus: true }
     )
 
