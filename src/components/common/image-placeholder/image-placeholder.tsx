@@ -14,6 +14,10 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
     className,
     fill = true
 }) => {
+    const loaderProp = ({ src }: any) => {
+        return src
+    }
+
     if (!src) return
     return (
         <Image
@@ -25,6 +29,7 @@ const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
             alt={alt}
             fill={fill}
             className={classNames('object-cover', className)}
+            loader={loaderProp}
         />
     )
 }
