@@ -8,7 +8,7 @@ export default function LandingActionButton() {
     const router = useRouter()
 
     const gotoCGV = () => {
-        router.push('/complaint-gambling-victim')
+        router.push('/report-appeal')
     }
 
     const gotoReport = () => {

@@ -54,7 +54,7 @@ function NavList({ onClickLink }: NavListProps) {
                 text: 'ผู้เสียหายร้องเรียนพนัน',
                 collapseText: 'ร้องเรียน',
                 icon: <FileEditIcon className='w-8 h-8' />,
-                path: '/complaint-gambling-victim'
+                path: '/report-appeal'
             },
             {
                 text: 'รณรงณ์ / ข่าวสาร',
