@@ -11,7 +11,10 @@ export default function Page() {
     const handleSubmit = async (value: ReportFormValue) => {
         const request = {
             ...value,
-            type: 1
+            type: 1,
+            reason: '3',
+            cause: '3',
+            period: '2'
         } as ReportFormValue
 
         const success = await createForm(request)

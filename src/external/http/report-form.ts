@@ -139,10 +139,7 @@ export const reportFormToFormRequest: ReportFormToFormRequest = async (
             disconnect: [],
             connect: [
                 {
-                    id:
-                        Number(formValue.cause) === 0
-                            ? 3
-                            : Number(formValue.cause),
+                    id: Number(formValue.cause),
                     position: {
                         end: true
                     }
@@ -153,10 +150,7 @@ export const reportFormToFormRequest: ReportFormToFormRequest = async (
             disconnect: [],
             connect: [
                 {
-                    id:
-                        Number(formValue.period) === 0
-                            ? 2
-                            : Number(formValue.period),
+                    id: Number(formValue.period),
                     position: {
                         end: true
                     }
@@ -167,10 +161,7 @@ export const reportFormToFormRequest: ReportFormToFormRequest = async (
             disconnect: [],
             connect: [
                 {
-                    id:
-                        Number(formValue.reason) === 0
-                            ? 3
-                            : Number(formValue.reason),
+                    id: Number(formValue.reason),
                     position: {
                         end: true
                     }
