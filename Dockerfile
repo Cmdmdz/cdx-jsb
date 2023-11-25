@@ -6,11 +6,6 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY --link package.json pnpm-lock.yaml* ./
-RUN yarn global add pnpm && pnpm i --frozen-lockfile
-
-
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
